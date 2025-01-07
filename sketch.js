@@ -82,14 +82,12 @@ function draw() {
   textSize(32);
   text(year, 0, 0);
 
-  noFill();
-  
-// ...
+  // ...
 noFill();
 stroke(255);
 
 let firstValue = true;
-let previousAnomaly = 0; // Make sure previousAnomaly is reset here if needed
+let previousAnomaly = 0; //previousAnomaly is reset here if needed
 
 for (let j = 0; j < currentRow; j++) {
   let row = data.getRow(j);
@@ -147,7 +145,6 @@ for (let j = 0; j < currentRow; j++) {
     firstValue = false;
   }
 }
-// ...
 
   currentMonth = currentMonth + 1;
   if (currentMonth == months.length) {
