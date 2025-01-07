@@ -84,6 +84,70 @@ function draw() {
 
   noFill();
   
+// ...
+noFill();
+stroke(255);
+
+let firstValue = true;
+let previousAnomaly = 0; // Make sure previousAnomaly is reset here if needed
+
+for (let j = 0; j < currentRow; j++) {
+  let row = data.getRow(j);
+
+  // Decide how many months to draw in the current row
+  let totalMonths = months.length;
+  if (j === currentRow - 1) {
+    totalMonths = currentMonth;
+  }
+
+  for (let i = 0; i < totalMonths; i++) {
+    let anomaly = row.get(months[i]);
+
+    // Skip invalid data
+    if (anomaly === "***") {
+      continue;
+    }
+
+    anomaly = parseFloat(anomaly);
+
+    // Convert the month index to an angle around the circle
+    let angle = map(i, 0, months.length, 0, TWO_PI) - PI / 3;
+
+    // Convert the anomaly into a radius between zeroRadius and oneRadius
+    let r = map(anomaly, 0, 1, zeroRadius, oneRadius);
+    let x = r * cos(angle);
+    let y = r * sin(angle);
+
+    // Calculate an "average" so your colors transition smoothly.
+    // For the very first value, we can just use anomaly itself.
+    let avg = anomaly;
+    if (!firstValue) {
+      avg = (anomaly + previousAnomaly) * 0.5;
+    }
+
+    // Determine color based on whether avg is above or below zero
+    let cold = color(0, 0, 255);
+    let warm = color(255, 0, 0);
+    let zeroC = color(255); // Neutral white
+    let dotColor = zeroC;
+
+    if (avg < 0) {
+      dotColor = lerpColor(zeroC, cold, abs(avg));
+    } else {
+      dotColor = lerpColor(zeroC, warm, abs(avg));
+    }
+
+    // Draw the dot
+    noStroke();
+    fill(dotColor);
+    ellipse(x, y, 5, 5);
+
+    // Update previous anomaly tracking
+    previousAnomaly = anomaly;
+    firstValue = false;
+  }
+}
+// ...
 
   currentMonth = currentMonth + 1;
   if (currentMonth == months.length) {
